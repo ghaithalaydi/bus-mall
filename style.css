@@ -1,3 +1,6 @@
+body{
+  background-color:thistle;
+}
 section div {
 
     display: inline-block;
@@ -9,7 +12,25 @@ section div img{
 
     height: 450px;
     width: 450px;
+    border-style: solid;
+    border-color: purple;
+    border-width: 7px;
+    
 }
 section{
   text-align: center;
+}
+h1{
+  background-color: black;
+  color: snow;
+}
+button{
+  color: aqua;
+  background-color: black;
+  width: 200px;
+  height: 50px;
+}
+button:hover{
+  color: yellow;
+  background-color: red;
 }

@@ -7,6 +7,8 @@ var rightImage = document.getElementById("right-image");
 var resultsSection = document.getElementById("results-section")
 var resultEntry = [];
 var numberOfRounds = 0;
+var previousPicks=[];
+var drawingArea= document.getElementById("stats").getContext("2d");
 
 function Product(nameParam, imgPath) {
     this.name = nameParam,
@@ -40,22 +42,31 @@ new Product("wine-glas", "img/wine-glass.jpg");
 
 function renderImages() {
     var randomNumberFirst = Math.round(Math.random() * (arrayOfProducts.length - 1));
+    while(randomNumberFirst===previousPicks[1] || randomNumberFirst===previousPicks[2] || randomNumberFirst===previousPicks[3] ){
+        randomNumberFirst = Math.round(Math.random() * (arrayOfProducts.length - 1));
+    }
     leftImage.setAttribute("src", arrayOfProducts[randomNumberFirst].img);
     arrayOfProducts[randomNumberFirst].timeShown++;
 
     var randomNumberSecond = Math.round(Math.random() * (arrayOfProducts.length - 1));
-    while (randomNumberSecond === randomNumberFirst) {
+    while (randomNumberSecond === randomNumberFirst || randomNumberSecond===previousPicks[1] || randomNumberSecond===previousPicks[2] || randomNumberSecond===previousPicks[3]) {
         randomNumberSecond = Math.round(Math.random() * (arrayOfProducts.length - 1));
     }
     middleImage.setAttribute("src", arrayOfProducts[randomNumberSecond].img);
     arrayOfProducts[randomNumberSecond].timeShown++;
 
     var randomNumberThird = Math.round(Math.random() * (arrayOfProducts.length - 1));
-    while (randomNumberThird === randomNumberFirst || randomNumberThird === randomNumberSecond) {
+    while (randomNumberThird === randomNumberFirst || randomNumberThird === randomNumberSecond || randomNumberThird===previousPicks[1] || randomNumberThird===previousPicks[2] || randomNumberThird===previousPicks[3]) {
         randomNumberThird = Math.round(Math.random() * (arrayOfProducts.length - 1));
     }
     rightImage.setAttribute("src", arrayOfProducts[randomNumberThird].img);
     arrayOfProducts[randomNumberThird].timeShown++;
+
+    previousPicks=[];
+
+    previousPicks.push(randomNumberFirst);
+    previousPicks.push(randomNumberSecond);
+    previousPicks.push(randomNumberThird);
 }
 
 renderImages();
@@ -78,21 +89,154 @@ parentElement.addEventListener("click", function userChoice(event) {
     if (numberOfRounds === 25) {
         parentElement.removeEventListener("click", userChoice)
         var resultsButton = document.createElement("button");
-        parentElement.appendChild(resultsButton);
+        resultsSection.appendChild(resultsButton);
         resultsButton.textContent = "View Results";
         resultsButton.addEventListener("click", printOut)
     }
     renderImages();
 }
 )
-function printOut() {
+// function printOut() {
 
-    for (var index = 0; index < arrayOfProducts.length; index++) {
-        resultEntry[index] = document.createElement("p");
-        resultEntry[index].textContent = arrayOfProducts[index].name + " had " + arrayOfProducts[index].timesPicked + " votes, and was seen" + arrayOfProducts[index].timeShown + " times.";
-        resultsSection.appendChild(resultEntry[index]);
+//     for (var index = 0; index < arrayOfProducts.length; index++) {
+//         resultEntry[index] = document.createElement("p");
+//         resultEntry[index].textContent = arrayOfProducts[index].name + " had " + arrayOfProducts[index].timesPicked + " votes, and was seen" + arrayOfProducts[index].timeShown + " times.";
+//         resultsSection.appendChild(resultEntry[index]);
 
+//     }
+
+
+// }
+function printOut(){
+    var arrayProductName=[];
+    for(var index=0;index<arrayOfProducts.length;index++){
+        arrayProductName[index]=arrayOfProducts[index].name;
     }
+    var arrayTimesShown=[];
+    for(var x=0;x<arrayOfProducts.length;x++){
+        arrayTimesShown[x]=arrayOfProducts[x].timeShown;
+    }
+    var arrayTimesPicked=[];
+    for(var z=0;z<arrayOfProducts.length;z++){
+        arrayTimesPicked[z]=arrayOfProducts[z].timesPicked;
+    }
+
+var myChart = new Chart(drawingArea, {
+    type: 'bar',
+    data: {
+        labels: arrayProductName,
+        datasets: [{
+            label: '# of Times displayed',
+            data: arrayTimesShown,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                "rgba(235, 22, 68, 0.2)",
+                "rgba(117, 85, 5, 0.2)",
+                "rgb(13, 112, 112,0.2)",
+                "rgba(28, 9, 65, 0.2)",
+                "rgba(25, 65, 9, 0.2)",
+                "rgba(53, 65, 9, 0.2)",
+                "rgba(65, 9, 48, 0.2)",
+                "rgba(65, 20, 9, 0.2)",
+                "rgba(75, 20, 9, 0.2)",
+                'rgba(153, 155, 255, 0.2)',
+                'rgba(200, 102, 255, 0.2)',
+                'rgba(153, 50, 70, 0.2)',
+                'rgba(112, 157, 112, 0.2)',
+                'rgba(69, 155, 65, 0.2)',
+
+
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                "rgba(235, 22, 68, 1),",
+                "rgba(117, 85, 5, 1)",
+                "rgb(13, 112, 112,1)",
+                "rgba(28, 9, 65, 1)",
+                "rgba(25, 65, 9, 1)",
+                "rgba(53, 65, 9, 1)",
+                "rgba(65, 9, 48, 1)",
+                "rgba(65, 20, 9, 1)",
+                "rgba(75, 20, 9, 1)",
+                'rgba(153, 155, 255, 1)',
+                'rgba(200, 102, 255, 1)',
+                'rgba(153, 50, 70, 1)',
+                'rgba(112, 157, 112, 1)',
+                'rgba(69, 155, 65, 1)',
+                
+            ],
+            borderWidth: 1
+        }, {
+            label: '# of Times Picked',
+            data: arrayTimesPicked,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                "rgba(235, 22, 68, 0.2)",
+                "rgba(117, 85, 5, 0.2)",
+                "rgb(13, 112, 112,0.2)",
+                "rgba(28, 9, 65, 0.2)",
+                "rgba(25, 65, 9, 0.2)",
+                "rgba(53, 65, 9, 0.2)",
+                "rgba(65, 9, 48, 0.2)",
+                "rgba(65, 20, 9, 0.2)",
+                "rgba(75, 20, 9, 0.2)",
+                'rgba(153, 155, 255, 0.2)',
+                'rgba(200, 102, 255, 0.2)',
+                'rgba(153, 50, 70, 0.2)',
+                'rgba(112, 157, 112, 0.2)',
+                'rgba(69, 155, 65, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                "rgba(235, 22, 68, 1),",
+                "rgba(117, 85, 5, 1)",
+                "rgb(13, 112, 112,1)",
+                "rgba(28, 9, 65, 1)",
+                "rgba(25, 65, 9, 1)",
+                "rgba(53, 65, 9, 1)",
+                "rgba(65, 9, 48, 1)",
+                "rgba(65, 20, 9, 1)",
+                "rgba(75, 20, 9, 1)",
+                'rgba(153, 155, 255, 1)',
+                'rgba(200, 102, 255, 1)',
+                'rgba(153, 50, 70, 1)',
+                'rgba(112, 157, 112, 1)',
+                'rgba(69, 155, 65, 1)',
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
 
 
 }
